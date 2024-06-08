@@ -2,16 +2,10 @@ import type {
   ActJWTClaim,
   CheckAuthorizationWithCustomPermissions,
   Clerk,
-  GetToken,
-  LoadedClerk,
   OrganizationCustomRoleKey,
-  SignOut,
 } from '@clerk/types'
-import { useStore } from '@nanostores/solid'
-import { Accessor, createEffect, createMemo } from 'solid-js'
-import { unwrap } from 'solid-js/store'
-import { $authStore, $clerk, $csrState, authStore, csrStore } from 'src/stores'
-import { deriveState, deriveFromSsrInitialState, deriveFromClientSideState } from 'src/stores/utils'
+import { Accessor, createMemo } from 'solid-js'
+import { $clerk, $csrState, authStore } from 'src/stores'
 
 type CheckAuthorizationSignedOut = undefined
 type CheckAuthorizationWithoutOrgOrUser = (
