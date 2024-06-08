@@ -10,7 +10,7 @@ const App: Component = () => {
         <img src={logo} class={styles.logo} alt="logo" />
         <h1>
           <Hello></Hello>
-          <Clerk/>
+          <Clerk />
         </h1>
         <p>
           Edit <code>src/App.tsx</code> and save to reload.

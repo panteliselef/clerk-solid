@@ -53,16 +53,14 @@ export const Clerk: Component<{}> = props => {
       const clerkJSInstance = window.Clerk
       await window.Clerk.load()
 
-
       // TODO: add nano stores solid
       // TODO: Create google one tap for solid
-      clerkJSInstance.addListener((payload) => {
-        $csrState.setKey('client', payload.client);
-        $csrState.setKey('user', payload.user);
-        $csrState.setKey('session', payload.session);
-        $csrState.setKey('organization', payload.organization);
-      });
-
+      clerkJSInstance.addListener(payload => {
+        $csrState.setKey('client', payload.client)
+        $csrState.setKey('user', payload.user)
+        $csrState.setKey('session', payload.session)
+        $csrState.setKey('organization', payload.organization)
+      })
     },
   })
 

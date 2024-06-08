@@ -1,14 +1,14 @@
-import { Accessor, createRenderEffect, onCleanup, splitProps, type ComponentProps } from "solid-js";
-import { spread, isServer } from "solid-js/web";
+import { Accessor, createRenderEffect, onCleanup, splitProps, type ComponentProps } from 'solid-js'
+import { spread, isServer } from 'solid-js/web'
 
-export type ScriptProps = Omit<ComponentProps<"script">, "src" | "textContent"> & {
+export type ScriptProps = Omit<ComponentProps<'script'>, 'src' | 'textContent'> & {
   /** URL or source of the script to load. */
-  src: string | Accessor<string>;
+  src: string | Accessor<string>
   /** arbitrary data attributes commonly used by tracking scripts */
-  [dataAttribute: `data-${string}`]: any;
-};
+  [dataAttribute: `data-${string}`]: any
+}
 
-const OMITTED_PROPS = ["src"] as const;
+const OMITTED_PROPS = ['src'] as const
 
 /**
  * Creates a convenient script loader utility
@@ -29,19 +29,19 @@ const OMITTED_PROPS = ["src"] as const;
  */
 export function createScriptLoader(props: ScriptProps): HTMLScriptElement | undefined {
   if (isServer) {
-    return undefined;
+    return undefined
   }
-  const script = document.createElement("script");
-  const [local, scriptProps] = splitProps(props, OMITTED_PROPS);
-  setTimeout(() => spread(script, scriptProps, false, true));
+  const script = document.createElement('script')
+  const [local, scriptProps] = splitProps(props, OMITTED_PROPS)
+  setTimeout(() => spread(script, scriptProps, false, true))
   createRenderEffect(() => {
-    const src = typeof local.src === "string" ? local.src : local.src();
-    const prop = /^(https?:|\w[\.\w-_%]+|)\//.test(src) ? "src" : "textContent";
+    const src = typeof local.src === 'string' ? local.src : local.src()
+    const prop = /^(https?:|\w[\.\w-_%]+|)\//.test(src) ? 'src' : 'textContent'
     if (script[prop] !== src) {
-      script[prop] = src;
-      document.head.appendChild(script);
+      script[prop] = src
+      document.head.appendChild(script)
     }
-  });
-  onCleanup(() => document.head.contains(script) && document.head.removeChild(script));
-  return script;
+  })
+  onCleanup(() => document.head.contains(script) && document.head.removeChild(script))
+  return script
 }
