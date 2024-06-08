@@ -9,11 +9,6 @@ export function createHello(): [Accessor<string>, (to: string) => void] {
 export const Hello: Component<{ to?: string }> = props => {
   const [hello, setHello] = createHello()
 
-  // Console calls will be removed in production if `dropConsole` is enabled
-
-  // eslint-disable-next-line no-console
-  console.log('Hello World!')
-
   createComputed(() => {
     if (typeof props.to === 'string') setHello(props.to)
   })
@@ -27,3 +22,4 @@ export const Hello: Component<{ to?: string }> = props => {
 
 export { Clerk } from './clerk'
 export { useAuth } from './hooks'
+export { UserProfile } from './components/user-profile'

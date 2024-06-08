@@ -2,14 +2,10 @@ import type {
   ActJWTClaim,
   CheckAuthorizationWithCustomPermissions,
   Clerk,
-  GetToken,
-  LoadedClerk,
   OrganizationCustomRoleKey,
-  SignOut,
 } from '@clerk/types'
-import { useStore } from '@nanostores/solid'
-import { Accessor, createEffect, createMemo } from 'solid-js'
-import { $authStore, $clerk, $csrState } from 'src/stores'
+import { Accessor, createMemo } from 'solid-js'
+import { $clerk, $csrState, authStore } from 'src/stores'
 
 type CheckAuthorizationSignedOut = undefined
 type CheckAuthorizationWithoutOrgOrUser = (
@@ -133,16 +129,16 @@ type UseAuthReturn =
  */
 // : UseAuthReturn
 export const useAuth = (): Accessor<UseAuthReturn> => {
-  const auth = useStore($authStore)
+  // const auth = useStore($authStore)
 
   // const getToken: GetToken = useCallback(createGetToken(), [])
   // const signOut: SignOut = useCallback(createSignOut(), [])
 
   const has = (params: Parameters<CheckAuthorizationWithCustomPermissions>[0]) => {
-    const userId = auth().userId
-    const orgId = auth().orgId
-    const orgRole = auth().orgRole
-    const orgPermissions = auth().orgPermissions
+    const userId = authStore().userId
+    const orgId = authStore().orgId
+    const orgRole = authStore().orgRole
+    const orgPermissions = authStore().orgPermissions
 
     if (!params?.permission && !params?.role) {
       throw new Error(
@@ -166,12 +162,12 @@ export const useAuth = (): Accessor<UseAuthReturn> => {
   }
 
   return createMemo<UseAuthReturn>(() => {
-    const sessionId = auth().sessionId
-    const userId = auth().userId
-    const orgId = auth().orgId
-    const orgRole = auth().orgRole
-    const actor = auth().actor
-    const orgSlug = auth().orgSlug
+    const sessionId = authStore().sessionId
+    const userId = authStore().userId
+    const orgId = authStore().orgId
+    const orgRole = authStore().orgRole
+    const actor = authStore().actor
+    const orgSlug = authStore().orgSlug
 
     if (sessionId === undefined && userId === undefined) {
       return {

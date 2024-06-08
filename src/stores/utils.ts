@@ -13,7 +13,6 @@ export function deriveState(
   state: Resources,
   initialState: InitialState | undefined,
 ) {
-  console.log('dwada', clerkLoaded, state, initialState)
   if (!clerkLoaded && initialState)
     return {
       ...deriveFromSsrInitialState(initialState),
@@ -52,7 +51,7 @@ function deriveFromSsrInitialState(initialState: InitialState) {
   }
 }
 
-function deriveFromClientSideState(state: Resources) {
+export function deriveFromClientSideState(state: Resources) {
   const userId: string | null | undefined = state.user ? state.user.id : state.user
   const user = state.user
   const sessionId: string | null | undefined = state.session ? state.session.id : state.session
