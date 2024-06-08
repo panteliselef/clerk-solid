@@ -8,6 +8,8 @@ import type {
 import { atom, map, computed } from 'nanostores'
 import { deriveState } from './utils'
 import { HeadlessBrowserClerk } from 'src/types'
+import { createStore } from 'solid-js/store'
+import { createMemo, createSignal } from 'solid-js'
 
 export const $csrState = map<{
   isLoaded: boolean
@@ -39,3 +41,34 @@ export const $authStore = computed([$csrState, $initialState], (state, initialSt
     initialState,
   )
 })
+
+const [csrStore, setCsrStore] = createStore<{
+  isLoaded: boolean
+  client: ClientResource | undefined | null
+  user: UserResource | undefined | null
+  session: ActiveSessionResource | undefined | null
+  organization: OrganizationResource | undefined | null
+}>({
+  isLoaded: false,
+  client: null,
+  user: null,
+  session: null,
+  organization: null,
+})
+
+const authStore = createMemo(() => {
+  return deriveState(
+    csrStore.isLoaded,
+    {
+      session: csrStore.session,
+      user: csrStore.user,
+      organization: csrStore.organization,
+      client: csrStore.client!,
+    },
+    undefined,
+  )
+})
+
+const [clerk, setClerk] = createSignal<HeadlessBrowserClerk | null>(null)
+
+export { csrStore, setCsrStore, authStore, clerk, setClerk }

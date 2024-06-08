@@ -1,8 +1,8 @@
-import { Component } from 'solid-js'
+import { Component, batch } from 'solid-js'
 import { parsePublishableKey } from '@clerk/shared/keys'
 import { createScriptLoader } from './script-loader'
 import { ClerkOptions, MultiDomainAndOrProxy, SDKMetadata, Without } from '@clerk/types'
-import { $csrState } from './stores'
+import { setClerk, setCsrStore } from './stores'
 
 export type IsomorphicClerkOptions = Without<ClerkOptions, 'isSatellite'> & {
   // Clerk?: ClerkProp;
@@ -47,27 +47,23 @@ function buildClerkHotloadScript(options: BuildClerkJsScriptOptions) {
 export const Clerk: Component<ClerkProviderProps> = props => {
   createScriptLoader({
     src: buildClerkHotloadScript(props),
-    // src: 'https://js.lclclerk.com/npm/clerk.browser.js',
     'data-clerk-publishable-key': props.publishableKey,
     async onLoad() {
       const clerkJSInstance = window.Clerk
       await window.Clerk.load()
-      $csrState.setKey('isLoaded', true)
+
+      setClerk(window.Clerk)
 
       // TODO: add nano stores solid
       // TODO: Create google one tap for solid
       clerkJSInstance.addListener(payload => {
-        $csrState.set({
-          isLoaded: true,
-          client: payload.client,
-          user: payload.user,
-          session: payload.session,
-          organization: payload.organization,
+        batch(() => {
+          setCsrStore('isLoaded', true)
+          setCsrStore('client', payload.client)
+          setCsrStore('user', payload.user)
+          setCsrStore('session', payload.session)
+          setCsrStore('organization', payload.organization)
         })
-        // $csrState.setKey('client', payload.client)
-        // $csrState.setKey('user', payload.user)
-        // $csrState.setKey('session', payload.session)
-        // $csrState.setKey('organization', payload.organization)
       })
     },
   })

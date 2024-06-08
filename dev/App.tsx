@@ -1,7 +1,7 @@
-import { Show, type Component } from 'solid-js'
+import { Show, batch, createEffect, createSignal, type Component } from 'solid-js'
 import logo from './logo.svg'
 import styles from './App.module.css'
-import { Hello, Clerk, useAuth } from 'src'
+import { Hello, Clerk, useAuth, UserProfile } from 'src'
 
 const App: Component = () => {
   const auth = useAuth()
@@ -12,8 +12,10 @@ const App: Component = () => {
         <img src={logo} class={styles.logo} alt="logo" />
         <h1>
           <Hello></Hello>
-          <Clerk publishableKey="" />
+          <Clerk publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY} />
         </h1>
+
+        <UserProfile />
 
         <Show when={auth().isSignedIn} fallback={<div>logged out</div>}>
           <div>logged in</div>
