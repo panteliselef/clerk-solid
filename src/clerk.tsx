@@ -1,9 +1,22 @@
 import { Component } from 'solid-js'
 import { parsePublishableKey } from '@clerk/shared/keys'
 import { createScriptLoader } from './script-loader'
-import { ClerkOptions, ClientResource, LoadedClerk, Without } from '@clerk/types'
+import { ClerkOptions, MultiDomainAndOrProxy, SDKMetadata, Without } from '@clerk/types'
+import { $csrState } from './stores'
 
-const publishableKey = 'xxxx'
+export type IsomorphicClerkOptions = Without<ClerkOptions, 'isSatellite'> & {
+  // Clerk?: ClerkProp;
+  clerkJSUrl?: string
+  clerkJSVariant?: 'headless' | ''
+  clerkJSVersion?: string
+  sdkMetadata?: SDKMetadata
+  publishableKey: string
+} & MultiDomainAndOrProxy
+
+export type ClerkProviderProps = IsomorphicClerkOptions & {
+  // children: React.ReactNode;
+  // initialState?: InitialState;
+}
 
 type BuildClerkJsScriptOptions = {
   clerkJSUrl?: string
@@ -27,39 +40,34 @@ const clerkJsScriptUrl = (opts: BuildClerkJsScriptOptions) => {
   return `https://${scriptHost}/npm/@clerk/clerk-js@${version}/dist/clerk.${variant}browser.js`
 }
 
-function buildClerkHotloadScript() {
-  return clerkJsScriptUrl({
-    publishableKey,
-  })
+function buildClerkHotloadScript(options: BuildClerkJsScriptOptions) {
+  return clerkJsScriptUrl(options)
 }
 
-export interface HeadlessBrowserClerk extends LoadedClerk {
-  load: (opts?: Without<ClerkOptions, 'isSatellite'>) => Promise<void>
-  updateClient: (client: ClientResource) => void
-}
-
-declare global {
-  interface Window {
-    Clerk: HeadlessBrowserClerk
-  }
-}
-
-export const Clerk: Component<{}> = props => {
+export const Clerk: Component<ClerkProviderProps> = props => {
   createScriptLoader({
-    src: buildClerkHotloadScript(),
+    src: buildClerkHotloadScript(props),
     // src: 'https://js.lclclerk.com/npm/clerk.browser.js',
-    'data-clerk-publishable-key': publishableKey,
+    'data-clerk-publishable-key': props.publishableKey,
     async onLoad() {
       const clerkJSInstance = window.Clerk
       await window.Clerk.load()
+      $csrState.setKey('isLoaded', true)
 
       // TODO: add nano stores solid
       // TODO: Create google one tap for solid
       clerkJSInstance.addListener(payload => {
-        $csrState.setKey('client', payload.client)
-        $csrState.setKey('user', payload.user)
-        $csrState.setKey('session', payload.session)
-        $csrState.setKey('organization', payload.organization)
+        $csrState.set({
+          isLoaded: true,
+          client: payload.client,
+          user: payload.user,
+          session: payload.session,
+          organization: payload.organization,
+        })
+        // $csrState.setKey('client', payload.client)
+        // $csrState.setKey('user', payload.user)
+        // $csrState.setKey('session', payload.session)
+        // $csrState.setKey('organization', payload.organization)
       })
     },
   })
