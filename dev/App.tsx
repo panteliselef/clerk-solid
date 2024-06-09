@@ -1,9 +1,10 @@
-import { Show, batch, createEffect, createSignal, type Component } from 'solid-js'
+import { Show, createSignal, type Component } from 'solid-js'
 import logo from './logo.svg'
 import styles from './App.module.css'
-import { Hello, Clerk, useAuth, UserProfile } from 'src'
+import { Hello, Clerk, useAuth, UserProfile, UserButton } from 'src'
 
 const App: Component = () => {
+  const [show, setShow] = createSignal(false)
   const auth = useAuth()
 
   return (
@@ -15,10 +16,17 @@ const App: Component = () => {
           <Clerk publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY} />
         </h1>
 
-        <UserProfile />
-
         <Show when={auth().isSignedIn} fallback={<div>logged out</div>}>
           <div>logged in</div>
+        </Show>
+
+        <UserButton />
+
+        <button onClick={() => setShow(prev => !prev)}>Toogle</button>
+
+        <Show when={show()} fallback={'oh noe'}>
+          nice
+          <UserProfile />
         </Show>
 
         <p>
