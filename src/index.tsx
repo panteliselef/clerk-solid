@@ -22,4 +22,4 @@ export const Hello: Component<{ to?: string }> = props => {
 
 export { Clerk } from './clerk'
 export { useAuth } from './hooks'
-export { UserProfile } from './components/user-profile'
+export * from './components/uiComponents'
