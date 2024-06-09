@@ -1,8 +1,9 @@
-import { Component, batch } from 'solid-js'
+import { Component } from 'solid-js'
 import { parsePublishableKey } from '@clerk/shared/keys'
 import { createScriptLoader } from './script-loader'
 import { ClerkOptions, MultiDomainAndOrProxy, SDKMetadata, Without } from '@clerk/types'
-import { setClerk, setCsrStore } from './stores'
+import { CSRStore, setClerk, setCsrStore } from './stores'
+import { reconcile } from 'solid-js/store'
 
 export type IsomorphicClerkOptions = Without<ClerkOptions, 'isSatellite'> & {
   // Clerk?: ClerkProp;
@@ -57,13 +58,12 @@ export const Clerk: Component<ClerkProviderProps> = props => {
       // TODO: add nano stores solid
       // TODO: Create google one tap for solid
       clerkJSInstance.addListener(payload => {
-        batch(() => {
-          setCsrStore('isLoaded', true)
-          setCsrStore('client', payload.client)
-          setCsrStore('user', payload.user)
-          setCsrStore('session', payload.session)
-          setCsrStore('organization', payload.organization)
-        })
+        setCsrStore(
+          reconcile({
+            ...payload,
+            isLoaded: true,
+          } as CSRStore),
+        )
       })
     },
   })
