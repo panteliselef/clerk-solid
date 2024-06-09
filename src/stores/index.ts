@@ -42,13 +42,15 @@ export const $authStore = computed([$csrState, $initialState], (state, initialSt
   )
 })
 
-const [csrStore, setCsrStore] = createStore<{
+export type CSRStore = {
   isLoaded: boolean
   client: ClientResource | undefined | null
   user: UserResource | undefined | null
   session: ActiveSessionResource | undefined | null
   organization: OrganizationResource | undefined | null
-}>({
+}
+
+const [csrStore, setCsrStore] = createStore<CSRStore>({
   isLoaded: false,
   client: null,
   user: null,
