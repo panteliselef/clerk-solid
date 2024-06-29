@@ -24,8 +24,7 @@ const UIPortal: Component<MountProps> = props => {
   const [myRef, setRef] = createSignal<HTMLDivElement>()
 
   createEffect(() => {
-    // TODO: Support props
-    props.mount?.(myRef()!, {})
+    props.mount?.(myRef()!, props.props)
   })
 
   onCleanup(() => {
@@ -35,51 +34,66 @@ const UIPortal: Component<MountProps> = props => {
   return <div ref={setRef} />
 }
 
-const SignIn: Component<SignInProps> = () => {
-  return <UIPortal mount={clerk()?.mountSignIn} unmount={clerk()?.unmountSignIn} />
+const SignIn: Component<SignInProps> = props => {
+  return <UIPortal mount={clerk()?.mountSignIn} unmount={clerk()?.unmountSignIn} props={props} />
 }
 
-const SignUp: Component<SignUpProps> = () => {
-  return <UIPortal mount={clerk()?.mountSignUp} unmount={clerk()?.unmountSignUp} />
+const SignUp: Component<SignUpProps> = props => {
+  return <UIPortal mount={clerk()?.mountSignUp} unmount={clerk()?.unmountSignUp} props={props} />
 }
 
-const UserButton: Component<UserButtonProps> = () => {
-  return <UIPortal mount={clerk()?.mountUserButton} unmount={clerk()?.unmountUserButton} />
+const UserButton: Component<UserButtonProps> = props => {
+  return (
+    <UIPortal mount={clerk()?.mountUserButton} unmount={clerk()?.unmountUserButton} props={props} />
+  )
 }
 
-const UserProfile: Component<UserProfileProps> = () => {
-  return <UIPortal mount={clerk()?.mountUserProfile} unmount={clerk()?.unmountUserProfile} />
+const UserProfile: Component<UserProfileProps> = props => {
+  return (
+    <UIPortal
+      mount={clerk()?.mountUserProfile}
+      unmount={clerk()?.unmountUserProfile}
+      props={props}
+    />
+  )
 }
 
-const OrganizationProfile: Component<OrganizationProfileProps> = () => {
+const OrganizationProfile: Component<OrganizationProfileProps> = props => {
   return (
     <UIPortal
       mount={clerk()?.mountOrganizationProfile}
       unmount={clerk()?.unmountOrganizationProfile}
+      props={props}
     />
   )
 }
 
-const OrganizationSwitcher: Component<OrganizationSwitcherProps> = () => {
+const OrganizationSwitcher: Component<OrganizationSwitcherProps> = props => {
   return (
     <UIPortal
       mount={clerk()?.mountOrganizationSwitcher}
       unmount={clerk()?.unmountOrganizationSwitcher}
+      props={props}
     />
   )
 }
 
-const OrganizationList: Component<OrganizationListProps> = () => {
+const OrganizationList: Component<OrganizationListProps> = props => {
   return (
-    <UIPortal mount={clerk()?.mountOrganizationList} unmount={clerk()?.unmountOrganizationList} />
+    <UIPortal
+      mount={clerk()?.mountOrganizationList}
+      unmount={clerk()?.unmountOrganizationList}
+      props={props}
+    />
   )
 }
 
-const CreateOrganization: Component<CreateOrganizationProps> = () => {
+const CreateOrganization: Component<CreateOrganizationProps> = props => {
   return (
     <UIPortal
       mount={clerk()?.mountCreateOrganization}
       unmount={clerk()?.unmountCreateOrganization}
+      props={props}
     />
   )
 }

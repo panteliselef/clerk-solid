@@ -54,9 +54,11 @@
     "update-deps": "pnpm up -Li"
   },
   "peerDependencies": {
-    "solid-js": "^1.6.0"
+    "solid-js": "^1.6.0",
+    "@solidjs/router": "^0.13.6"
   },
   "devDependencies": {
+    "@solidjs/router": "^0.13.6",
     "@types/node": "^20.12.12",
     "@typescript-eslint/eslint-plugin": "^7.9.0",
     "@typescript-eslint/parser": "^7.9.0",

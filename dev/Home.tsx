@@ -1,7 +1,8 @@
 import { Show, createSignal, type Component } from 'solid-js'
+import { A } from '@solidjs/router'
 import logo from './logo.svg'
 import styles from './App.module.css'
-import { Hello, Clerk, useAuth, UserProfile, UserButton } from 'src'
+import { Hello, Clerk, useAuth, UserProfile, UserButton, ClerkLoaded } from 'src'
 
 const App: Component = () => {
   const [show, setShow] = createSignal(false)
@@ -11,10 +12,12 @@ const App: Component = () => {
     <div class={styles.App}>
       <header class={styles.header}>
         <img src={logo} class={styles.logo} alt="logo" />
-        <h1>
-          <Hello></Hello>
-          <Clerk publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY} />
-        </h1>
+
+        <ClerkLoaded>
+          <h1>
+            <Hello />
+          </h1>
+        </ClerkLoaded>
 
         <Show when={auth().isSignedIn} fallback={<div>logged out</div>}>
           <div>logged in</div>
