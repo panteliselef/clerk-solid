@@ -4,6 +4,7 @@ import { createScriptLoader } from './script-loader'
 import { ClerkOptions, MultiDomainAndOrProxy, SDKMetadata, Without } from '@clerk/types'
 import { CSRStore, setClerk, setCsrStore } from './stores'
 import { reconcile } from 'solid-js/store'
+import { useNavigate } from '@solidjs/router'
 
 export type IsomorphicClerkOptions = Without<ClerkOptions, 'isSatellite'> & {
   // Clerk?: ClerkProp;
@@ -46,27 +47,36 @@ function buildClerkHotloadScript(options: BuildClerkJsScriptOptions) {
 }
 
 export const Clerk: Component<ClerkProviderProps> = props => {
-  createScriptLoader({
-    src: buildClerkHotloadScript(props),
-    'data-clerk-publishable-key': props.publishableKey,
-    async onLoad() {
-      const clerkJSInstance = window.Clerk
-      await window.Clerk.load()
+  const navigate = useNavigate()
 
-      setClerk(window.Clerk)
+  // Avoid re-initialization due to HMR
+  if (!window.Clerk) {
+    createScriptLoader({
+      src: buildClerkHotloadScript(props),
+      'data-clerk-publishable-key': props.publishableKey,
+      async onLoad() {
+        const clerkJSInstance = window.Clerk
 
-      // TODO: add nano stores solid
-      // TODO: Create google one tap for solid
-      clerkJSInstance.addListener(payload => {
-        setCsrStore(
-          reconcile({
-            ...payload,
-            isLoaded: true,
-          } as CSRStore),
-        )
-      })
-    },
-  })
+        await window.Clerk.load({
+          routerPush: to => navigate(to),
+          routerReplace: to => navigate(to, { replace: true }),
+        })
+
+        setClerk(window.Clerk)
+
+        // TODO: add nano stores solid
+        // TODO: Create google one tap for solid
+        clerkJSInstance.addListener(payload => {
+          setCsrStore(
+            reconcile({
+              ...payload,
+              isLoaded: true,
+            } as CSRStore),
+          )
+        })
+      },
+    })
+  }
 
   return null
 }
