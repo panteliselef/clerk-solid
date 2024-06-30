@@ -90,5 +90,8 @@
     "@nanostores/solid": "^0.4.2",
     "nanostores": "^0.10.3"
   },
-  "browser": {}
+  "browser": {},
+  "publishConfig": {
+    "access": "public"
+  }
 }
