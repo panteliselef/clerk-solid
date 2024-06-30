@@ -1,8 +1,7 @@
 import { Show, createSignal, type Component } from 'solid-js'
-import { A } from '@solidjs/router'
 import logo from './logo.svg'
 import styles from './App.module.css'
-import { Hello, Clerk, useAuth, UserProfile, UserButton, ClerkLoaded } from 'src'
+import { Hello, useAuth, UserProfile, UserButton, ClerkLoaded } from 'src'
 
 const App: Component = () => {
   const [show, setShow] = createSignal(false)
