@@ -1,6 +1,6 @@
 {
   "name": "clerk-solid",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Clerk Community SDK for Solid.js",
   "license": "MIT",
   "author": "Pantelis Eleftheriadis",
