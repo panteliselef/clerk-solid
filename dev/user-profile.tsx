@@ -1,4 +1,4 @@
-import { Show, createEffect, type Component } from 'solid-js'
+import { Show, type Component } from 'solid-js'
 import styles from './App.module.css'
 import { UserProfile, useSession, useUser } from 'src'
 
