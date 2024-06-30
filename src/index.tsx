@@ -21,6 +21,6 @@ export const Hello: Component<{ to?: string }> = props => {
 }
 
 export { Clerk } from './clerk'
-export { useAuth } from './hooks'
+export * from './hooks'
 export * from './components/uiComponents'
 export * from './components/controlCompoents'
