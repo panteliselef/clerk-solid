@@ -1,50 +1,15 @@
 import type {
   ActJWTClaim,
   CheckAuthorizationWithCustomPermissions,
-  Clerk,
   OrganizationCustomRoleKey,
 } from '@clerk/types'
 import { Accessor, createMemo } from 'solid-js'
-import { $clerk, $csrState, authStore } from 'src/stores'
+import { authStore } from 'src/stores'
 
 type CheckAuthorizationSignedOut = undefined
 type CheckAuthorizationWithoutOrgOrUser = (
   params?: Parameters<CheckAuthorizationWithCustomPermissions>[0],
 ) => false
-
-/**
- * @internal
- */
-const clerkLoaded = () => {
-  return new Promise<Clerk>(resolve => {
-    $csrState.subscribe(({ isLoaded }) => {
-      if (isLoaded) resolve($clerk.get()!)
-    })
-  })
-}
-
-/**
- * @internal
- */
-const createGetToken = () => {
-  return async (options: any) => {
-    const clerk = await clerkLoaded()
-    if (!clerk.session) {
-      return null
-    }
-    return clerk.session.getToken(options)
-  }
-}
-
-/**
- * @internal
- */
-const createSignOut = () => {
-  return async (...args: any) => {
-    const clerk = await clerkLoaded()
-    return clerk.signOut(...args)
-  }
-}
 
 type UseAuthReturn =
   | {
