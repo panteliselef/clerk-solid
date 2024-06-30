@@ -87,8 +87,7 @@
     "@changesets/cli": "^2.27.6",
     "@clerk/shared": "^2.2.2",
     "@clerk/types": "^4.6.0",
-    "@nanostores/solid": "^0.4.2",
-    "nanostores": "^0.10.3"
+    "@nanostores/solid": "^0.4.2"
   },
   "browser": {},
   "publishConfig": {
