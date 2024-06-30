@@ -41,11 +41,15 @@
     "lint": "concurrently pnpm:lint:*",
     "lint:code": "eslint --ignore-path .gitignore --max-warnings 0 src/**/*.{js,ts,tsx,jsx}",
     "lint:types": "tsc --noEmit",
-    "update-deps": "pnpm up -Li"
+    "update-deps": "pnpm up -Li",
+    "changeset": "changeset",
+    "release": "changeset publish && git push --follow-tags",
+    "version:snapshot": "changeset version --snapshot snapshot",
+    "release:snapshot": "changeset publish --tag snapshot --no-git-tag"
   },
   "peerDependencies": {
-    "solid-js": "^1.6.0",
-    "@solidjs/router": "^0.13.6"
+    "@solidjs/router": "^0.13.6",
+    "solid-js": "^1.6.0"
   },
   "devDependencies": {
     "@solidjs/router": "^0.13.6",
@@ -80,6 +84,7 @@
     "pnpm": ">=9.0.0"
   },
   "dependencies": {
+    "@changesets/cli": "^2.27.6",
     "@clerk/shared": "^2.2.2",
     "@clerk/types": "^4.6.0",
     "@nanostores/solid": "^0.4.2",

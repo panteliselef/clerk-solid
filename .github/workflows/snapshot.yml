@@ -1,0 +1,56 @@
+name: Snapshot release
+run-name: Snapshot release by ${{ github.actor }}
+
+on:
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.actor }}
+  cancel-in-progress: true
+
+jobs:
+  snapshot-release:
+    if: ${{ startsWith(github.event.comment.body, '!snapshot') && github.repository == 'panteliselef/clerk-solid' && github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.issue.number }}/head
+
+      - uses: pnpm/action-setup@v2.2.4
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install pnpm dependencies
+        run: pnpm install
+
+      - name: Version packages for snapshot
+        id: version-packages
+        run: |
+          touch .changeset/snap.md && echo -e "---\n'clerk-solid': patch\n---\n\nSnapshot release" > .changeset/snap.md
+          cat .changeset/snap.md
+          npm run version:snapshot
+
+      - name: Build clerk-solid
+        timeout-minutes: 5
+        run: pnpm build
+
+      - name: Create .npmrc
+        run: touch .npmrc && echo -e "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}\n" >> .npmrc
+
+      - name: Snapshot release
+        run: pnpm release:snapshot
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true

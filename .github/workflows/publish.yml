@@ -1,0 +1,40 @@
+name: Publish
+on:
+  push:
+   branches:
+    - main
+
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+
+      - uses: pnpm/action-setup@v2.2.4
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      
+      - name: Install pnpm dependencies
+        run: pnpm install
+
+      - name: Build clerk-solid
+        timeout-minutes: 5
+        run: pnpm build
+
+      - name: Create Release PR or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
