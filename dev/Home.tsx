@@ -1,7 +1,7 @@
 import { Show, createSignal, type Component } from 'solid-js'
 import logo from './logo.svg'
 import styles from './App.module.css'
-import { Hello, useAuth, UserProfile, UserButton, ClerkLoaded } from 'src'
+import { useAuth, UserProfile, UserButton, ClerkLoaded } from 'src'
 
 const App: Component = () => {
   const [show, setShow] = createSignal(false)
@@ -13,9 +13,7 @@ const App: Component = () => {
         <img src={logo} class={styles.logo} alt="logo" />
 
         <ClerkLoaded>
-          <h1>
-            <Hello />
-          </h1>
+          <h1>Hello</h1>
         </ClerkLoaded>
 
         <Show when={auth().isSignedIn} fallback={<div>logged out</div>}>

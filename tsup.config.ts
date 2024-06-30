@@ -1,5 +1,6 @@
 import { defineConfig } from 'tsup'
 import * as preset from 'tsup-preset-solid'
+import { peerDependencies, name, version } from './package.json'
 
 const preset_options: preset.PresetOptions = {
   // array or single object
@@ -8,14 +9,18 @@ const preset_options: preset.PresetOptions = {
     {
       // entries with '.tsx' extension will have `solid` export condition generated
       entry: 'src/index.tsx',
-      // will generate a separate development entry
-      dev_entry: true,
     },
   ],
-  // Set to `true` to remove all `console.*` calls and `debugger` statements in prod builds
   drop_console: true,
-  // Set to `true` to generate a CommonJS build alongside ESM
-  // cjs: true,
+  modify_esbuild_options: () => ({
+    bundle: true,
+    sourcemap: true,
+    external: Object.keys(peerDependencies),
+    define: {
+      PACKAGE_NAME: `"${name}"`,
+      PACKAGE_VERSION: `"${version}"`,
+    },
+  }),
 }
 
 const CI =
