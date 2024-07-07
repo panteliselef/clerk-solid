@@ -1,9 +1,12 @@
-import { ParentComponent, Show } from 'solid-js'
+import { ParentComponent, Show, createEffect } from 'solid-js'
 import { A } from '@solidjs/router'
 import { Clerk, SignedIn, SignedOut, UserButton, useAuth } from 'src'
 
 const RootLayout: ParentComponent = props => {
   const auth = useAuth()
+  createEffect(() => {
+    console.log('Auth:', auth())
+  })
   return (
     <>
       <nav>
@@ -16,7 +19,7 @@ const RootLayout: ParentComponent = props => {
           <UserButton />
         </SignedIn>
       </nav>
-      <Clerk publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY} />
+      <Clerk afterSignOutUrl={'/lol'} />
       {props.children}
     </>
   )

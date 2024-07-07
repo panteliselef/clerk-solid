@@ -19,10 +19,10 @@ export type CSRStore = {
 
 const [csrStore, setCsrStore] = createStore<CSRStore>({
   isLoaded: false,
-  client: null,
-  user: null,
-  session: null,
-  organization: null,
+  client: undefined,
+  user: undefined,
+  session: undefined,
+  organization: undefined,
 })
 
 const authStore = createMemo(() => {

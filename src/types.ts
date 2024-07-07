@@ -2,7 +2,7 @@ import { ClerkOptions, ClientResource, LoadedClerk, Without } from '@clerk/types
 
 declare global {
   interface Window {
-    Clerk: HeadlessBrowserClerk
+    Clerk?: HeadlessBrowserClerk
   }
 }
 
