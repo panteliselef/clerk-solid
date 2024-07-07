@@ -19,7 +19,7 @@ const RootLayout: ParentComponent = props => {
           <UserButton />
         </SignedIn>
       </nav>
-      <Clerk afterSignOutUrl={'/lol'} />
+      <Clerk />
       {props.children}
     </>
   )
