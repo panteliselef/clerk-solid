@@ -12,11 +12,12 @@ The Clerk Community SDK for Solid.js
 ## Roadmap
 - ✅ UI components
 - 🟡 Hooks
-- 🔜 Support for multi-domain and proxied apps
+- ✅ Support for multi-domain and proxied apps
 - 🟡 Control Components
 - 🔜 Protect
 - 🔜 Unstyled Components
-- 🔜 Support client safe environment variables
+- ✅ Support Clerk's environment variables
+- 🔜 Support Solid Start, middleware, SSR
 
 ## Quick start (to be published)
 
